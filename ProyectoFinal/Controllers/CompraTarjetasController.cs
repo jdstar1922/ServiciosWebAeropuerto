@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Models;
+using ProyectoFinal.Utils;
 
 namespace ProyectoFinal.Controllers
 {
@@ -59,6 +60,18 @@ namespace ProyectoFinal.Controllers
                 return BadRequest();
             }
 
+            ConsecutivoHandler con = new();
+
+            string nuevo_id = await con.GetId("5", _context);
+
+            if (nuevo_id == "")
+            {
+                return Problem("La cantidad máxima de consecutivos se ha usado");
+            }
+            else
+            {
+                compraTarjeta.num_tarjeta = nuevo_id;
+            }
             _context.Entry(compraTarjeta).State = EntityState.Modified;
 
             try
@@ -124,6 +137,12 @@ namespace ProyectoFinal.Controllers
             }
 
             _context.ComprasTarjeta.Remove(compraTarjeta);
+            ConsecutivoHandler con = new();
+            string liberar = await con.LiberarConsecutivo("5", _context);
+            if (liberar == null)
+            {
+                return Problem("Rango inicial alcanzado");
+            }
             await _context.SaveChangesAsync();
 
             return NoContent();

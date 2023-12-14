@@ -12,8 +12,8 @@ using ProyectoFinal.Models;
 namespace ProyectoFinal.Migrations.Aeropuerto
 {
     [DbContext(typeof(AeropuertoContext))]
-    [Migration("20231123191743_Initial")]
-    partial class Initial
+    [Migration("20231212005611_aeropuerto1")]
+    partial class aeropuerto1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,9 +60,6 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     b.Property<string>("cod_agencia")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Paisid_pais")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("id_pais")
                         .HasColumnType("nvarchar(max)");
 
@@ -75,8 +72,6 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("cod_agencia");
-
-                    b.HasIndex("Paisid_pais");
 
                     b.ToTable("Agencias");
                 });
@@ -121,15 +116,11 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.Property<string>("id_usuario")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("usuarioid_usuario")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("num_cuenta");
 
-                    b.HasIndex("usuarioid_usuario");
+                    b.HasIndex("id_usuario");
 
                     b.ToTable("ComprasEasyPay");
                 });
@@ -137,10 +128,6 @@ namespace ProyectoFinal.Migrations.Aeropuerto
             modelBuilder.Entity("ProyectoFinal.Models.CompraTarjeta", b =>
                 {
                     b.Property<string>("num_tarjeta")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Usuarioid_usuario")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("cvv_tarjeta")
@@ -152,11 +139,11 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.Property<string>("id_usuario")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("num_tarjeta");
 
-                    b.HasIndex("Usuarioid_usuario");
+                    b.HasIndex("id_usuario");
 
                     b.ToTable("ComprasTarjeta");
                 });
@@ -215,7 +202,7 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.Property<string>("cod_registro")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("descripcion_mantenimiento")
                         .IsRequired()
@@ -223,13 +210,22 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.Property<string>("id_consecutivo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("id_error")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("cod_registro")
+                        .IsUnique();
+
+                    b.HasIndex("id_consecutivo")
+                        .IsUnique();
+
+                    b.HasIndex("id_error")
+                        .IsUnique();
 
                     b.ToTable("Mantenimientos");
                 });
@@ -295,10 +291,6 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Vuelocod_vuelo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("booking_id")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -307,26 +299,23 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                         .HasColumnType("int");
 
                     b.Property<string>("cod_vuelo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("id_usuario")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("mensaje_reserva")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("usuarioid_usuario")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("num_reservacion");
 
-                    b.HasIndex("Vuelocod_vuelo");
+                    b.HasIndex("cod_vuelo")
+                        .IsUnique()
+                        .HasFilter("[cod_vuelo] IS NOT NULL");
 
-                    b.HasIndex("usuarioid_usuario");
+                    b.HasIndex("id_usuario");
 
                     b.ToTable("Reservas");
                 });
@@ -334,10 +323,7 @@ namespace ProyectoFinal.Migrations.Aeropuerto
             modelBuilder.Entity("ProyectoFinal.Models.Rol", b =>
                 {
                     b.Property<int>("id_rol")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id_rol"), 1L, 1);
 
                     b.Property<string>("nom_rol")
                         .IsRequired()
@@ -352,9 +338,6 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 {
                     b.Property<string>("id_usuario")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Rolid_rol")
-                        .HasColumnType("int");
 
                     b.Property<string>("contra_usuario")
                         .IsRequired()
@@ -389,7 +372,7 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.HasKey("id_usuario");
 
-                    b.HasIndex("Rolid_rol");
+                    b.HasIndex("id_rol");
 
                     b.ToTable("Usuarios");
                 });
@@ -399,18 +382,9 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     b.Property<string>("cod_vuelo")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Aerolineaid_aerolinea")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Paisid_pais")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Usuarioid_usuario")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("cod_puerta")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("estado_vuelo")
                         .HasColumnType("int");
@@ -420,32 +394,29 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
                     b.Property<string>("id_aerolinea")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("id_pais")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("id_usuario")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("nom_estadoV")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("puertacod_puerta")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("cod_vuelo");
 
-                    b.HasIndex("Aerolineaid_aerolinea");
+                    b.HasIndex("cod_puerta");
 
-                    b.HasIndex("Paisid_pais");
+                    b.HasIndex("id_aerolinea");
 
-                    b.HasIndex("Usuarioid_usuario");
+                    b.HasIndex("id_pais");
 
-                    b.HasIndex("puertacod_puerta");
+                    b.HasIndex("id_usuario");
 
                     b.ToTable("Vuelos");
                 });
@@ -470,27 +441,18 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 {
                     b.HasOne("ProyectoFinal.Models.Pais", "Pais")
                         .WithMany("Agencias")
-                        .HasForeignKey("Paisid_pais");
-
-                    b.Navigation("Pais");
-                });
-
-            modelBuilder.Entity("ProyectoFinal.Models.Bitacora", b =>
-                {
-                    b.HasOne("ProyectoFinal.Models.Mantenimiento", "Mantenimiento")
-                        .WithOne("Bitacora")
-                        .HasForeignKey("ProyectoFinal.Models.Bitacora", "cod_registro")
+                        .HasForeignKey("cod_agencia")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mantenimiento");
+                    b.Navigation("Pais");
                 });
 
             modelBuilder.Entity("ProyectoFinal.Models.CompraEasyPay", b =>
                 {
                     b.HasOne("ProyectoFinal.Models.Usuario", "usuario")
                         .WithMany("CompraEasyPays")
-                        .HasForeignKey("usuarioid_usuario")
+                        .HasForeignKey("id_usuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -501,33 +463,38 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 {
                     b.HasOne("ProyectoFinal.Models.Usuario", "Usuario")
                         .WithMany("CompraTarjetas")
-                        .HasForeignKey("Usuarioid_usuario")
+                        .HasForeignKey("id_usuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProyectoFinal.Models.Consecutivo", b =>
+            modelBuilder.Entity("ProyectoFinal.Models.Mantenimiento", b =>
                 {
-                    b.HasOne("ProyectoFinal.Models.Mantenimiento", "Mantenimiento")
-                        .WithOne("Consecutivo")
-                        .HasForeignKey("ProyectoFinal.Models.Consecutivo", "id_consecutivo")
+                    b.HasOne("ProyectoFinal.Models.Bitacora", "Bitacora")
+                        .WithOne("Mantenimiento")
+                        .HasForeignKey("ProyectoFinal.Models.Mantenimiento", "cod_registro")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mantenimiento");
-                });
-
-            modelBuilder.Entity("ProyectoFinal.Models.Error", b =>
-                {
-                    b.HasOne("ProyectoFinal.Models.Mantenimiento", "Mantenimiento")
-                        .WithOne("Error")
-                        .HasForeignKey("ProyectoFinal.Models.Error", "id_error")
+                    b.HasOne("ProyectoFinal.Models.Consecutivo", "Consecutivo")
+                        .WithOne("Mantenimiento")
+                        .HasForeignKey("ProyectoFinal.Models.Mantenimiento", "id_consecutivo")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mantenimiento");
+                    b.HasOne("ProyectoFinal.Models.Error", "Error")
+                        .WithOne("Mantenimiento")
+                        .HasForeignKey("ProyectoFinal.Models.Mantenimiento", "id_error")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bitacora");
+
+                    b.Navigation("Consecutivo");
+
+                    b.Navigation("Error");
                 });
 
             modelBuilder.Entity("ProyectoFinal.Models.Puerta", b =>
@@ -542,14 +509,13 @@ namespace ProyectoFinal.Migrations.Aeropuerto
             modelBuilder.Entity("ProyectoFinal.Models.Reserva", b =>
                 {
                     b.HasOne("ProyectoFinal.Models.Vuelo", "Vuelo")
-                        .WithMany()
-                        .HasForeignKey("Vuelocod_vuelo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Reserva")
+                        .HasForeignKey("ProyectoFinal.Models.Reserva", "cod_vuelo")
+                        .OnDelete(DeleteBehavior.ClientNoAction);
 
                     b.HasOne("ProyectoFinal.Models.Usuario", "usuario")
                         .WithMany("Reservas")
-                        .HasForeignKey("usuarioid_usuario")
+                        .HasForeignKey("id_usuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -562,7 +528,7 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 {
                     b.HasOne("ProyectoFinal.Models.Rol", "Rol")
                         .WithMany("usuarios")
-                        .HasForeignKey("Rolid_rol")
+                        .HasForeignKey("id_rol")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -571,21 +537,29 @@ namespace ProyectoFinal.Migrations.Aeropuerto
 
             modelBuilder.Entity("ProyectoFinal.Models.Vuelo", b =>
                 {
+                    b.HasOne("ProyectoFinal.Models.Puerta", "puerta")
+                        .WithMany("vuelo")
+                        .HasForeignKey("cod_puerta")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ProyectoFinal.Models.Aerolinea", "Aerolinea")
                         .WithMany("Vuelos")
-                        .HasForeignKey("Aerolineaid_aerolinea");
+                        .HasForeignKey("id_aerolinea")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ProyectoFinal.Models.Pais", "Pais")
                         .WithMany("Vuelos")
-                        .HasForeignKey("Paisid_pais");
+                        .HasForeignKey("id_pais")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ProyectoFinal.Models.Usuario", "Usuario")
                         .WithMany("Vuelos")
-                        .HasForeignKey("Usuarioid_usuario");
-
-                    b.HasOne("ProyectoFinal.Models.Puerta", "puerta")
-                        .WithMany("vuelo")
-                        .HasForeignKey("puertacod_puerta");
+                        .HasForeignKey("id_usuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Aerolinea");
 
@@ -603,15 +577,19 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     b.Navigation("Vuelos");
                 });
 
-            modelBuilder.Entity("ProyectoFinal.Models.Mantenimiento", b =>
+            modelBuilder.Entity("ProyectoFinal.Models.Bitacora", b =>
                 {
-                    b.Navigation("Bitacora");
+                    b.Navigation("Mantenimiento");
+                });
 
-                    b.Navigation("Consecutivo")
-                        .IsRequired();
+            modelBuilder.Entity("ProyectoFinal.Models.Consecutivo", b =>
+                {
+                    b.Navigation("Mantenimiento");
+                });
 
-                    b.Navigation("Error")
-                        .IsRequired();
+            modelBuilder.Entity("ProyectoFinal.Models.Error", b =>
+                {
+                    b.Navigation("Mantenimiento");
                 });
 
             modelBuilder.Entity("ProyectoFinal.Models.Pais", b =>
@@ -642,6 +620,11 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     b.Navigation("Reservas");
 
                     b.Navigation("Vuelos");
+                });
+
+            modelBuilder.Entity("ProyectoFinal.Models.Vuelo", b =>
+                {
+                    b.Navigation("Reserva");
                 });
 #pragma warning restore 612, 618
         }

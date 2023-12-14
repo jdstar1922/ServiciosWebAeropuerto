@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoFinal.Models
 {
     public class Aerolinea
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string id_aerolinea { get; set; } = null!;
         public string nom_aerolinea {  set; get; } = null!;
         public string logo_aerolinea { set; get;} = null!;
@@ -13,7 +15,7 @@ namespace ProyectoFinal.Models
         public string? id_pais { set; get; }
         
         public Pais? Pais { set;  get; }
-        public ICollection<Puerta> Puertas { get; } = null!;
-        public ICollection<Vuelo> Vuelos { get; } = null!;
+        public ICollection<Puerta> Puertas { get; } = new List<Puerta>();
+        public ICollection<Vuelo> Vuelos { get; } = new List<Vuelo>();
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Models;
+using ProyectoFinal.Utils;
 
 namespace ProyectoFinal.Controllers
 {
@@ -89,6 +90,19 @@ namespace ProyectoFinal.Controllers
           {
               return Problem("Entity set 'AeropuertoContext.Aerolineas'  is null.");
           }
+
+            ConsecutivoHandler con = new();
+
+            string nuevo_id = await con.GetId("2", _context);
+
+            if (nuevo_id == "")
+            {
+                return Problem("La cantidad máxima de consecutivos se ha usado");
+            }
+            else
+            {
+                aerolinea.id_aerolinea = nuevo_id;
+            }
             _context.Aerolineas.Add(aerolinea);
             try
             {
@@ -124,6 +138,12 @@ namespace ProyectoFinal.Controllers
             }
 
             _context.Aerolineas.Remove(aerolinea);
+            ConsecutivoHandler con = new();
+            string liberar = await con.LiberarConsecutivo("2", _context);
+            if (liberar == null)
+            {
+                return Problem("Rango inicial alcanzado");
+            }
             await _context.SaveChangesAsync();
 
             return NoContent();

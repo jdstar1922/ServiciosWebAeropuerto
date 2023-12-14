@@ -26,15 +26,7 @@ namespace ProyectoFinal.Migrations
                     b.Property<string>("num_cuenta")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Transaccionid_movimientos")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("cantidad_dinero")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("id_movimientos")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -43,8 +35,6 @@ namespace ProyectoFinal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("num_cuenta");
-
-                    b.HasIndex("Transaccionid_movimientos");
 
                     b.ToTable("Cuentas");
                 });
@@ -61,7 +51,13 @@ namespace ProyectoFinal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("num_cuenta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("id_movimientos");
+
+                    b.HasIndex("num_cuenta");
 
                     b.ToTable("Transacciones");
                 });
@@ -79,6 +75,10 @@ namespace ProyectoFinal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("num_cuenta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("pri_apellido")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -89,18 +89,39 @@ namespace ProyectoFinal.Migrations
 
                     b.HasKey("Cedula_usuario");
 
+                    b.HasIndex("num_cuenta")
+                        .IsUnique();
+
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("ProyectoFinal.ModelsBanco.Transaccion", b =>
+                {
+                    b.HasOne("ProyectoFinal.ModelsBanco.Cuenta", "Cuenta")
+                        .WithMany("Transaccions")
+                        .HasForeignKey("num_cuenta")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cuenta");
+                });
+
+            modelBuilder.Entity("ProyectoFinal.ModelsBanco.UsuarioBanco", b =>
+                {
+                    b.HasOne("ProyectoFinal.ModelsBanco.Cuenta", "Cuenta")
+                        .WithOne("UsuarioBanco")
+                        .HasForeignKey("ProyectoFinal.ModelsBanco.UsuarioBanco", "num_cuenta")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cuenta");
                 });
 
             modelBuilder.Entity("ProyectoFinal.ModelsBanco.Cuenta", b =>
                 {
-                    b.HasOne("ProyectoFinal.ModelsBanco.Transaccion", "Transaccion")
-                        .WithMany()
-                        .HasForeignKey("Transaccionid_movimientos")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Transaccions");
 
-                    b.Navigation("Transaccion");
+                    b.Navigation("UsuarioBanco");
                 });
 #pragma warning restore 612, 618
         }

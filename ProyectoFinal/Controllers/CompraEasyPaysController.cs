@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Models;
+using ProyectoFinal.Utils;
 
 namespace ProyectoFinal.Controllers
 {
@@ -89,6 +90,19 @@ namespace ProyectoFinal.Controllers
           {
               return Problem("Entity set 'AeropuertoContext.ComprasEasyPay'  is null.");
           }
+
+            ConsecutivoHandler con = new();
+
+            string nuevo_id = await con.GetId("4", _context);
+
+            if (nuevo_id == "")
+            {
+                return Problem("La cantidad máxima de consecutivos se ha usado");
+            }
+            else
+            {
+                compraEasyPay.num_cuenta = nuevo_id;
+            }
             _context.ComprasEasyPay.Add(compraEasyPay);
             try
             {
@@ -124,6 +138,12 @@ namespace ProyectoFinal.Controllers
             }
 
             _context.ComprasEasyPay.Remove(compraEasyPay);
+            ConsecutivoHandler con = new();
+            string liberar = await con.LiberarConsecutivo("4", _context);
+            if (liberar == null)
+            {
+                return Problem("Rango inicial alcanzado");
+            }
             await _context.SaveChangesAsync();
 
             return NoContent();

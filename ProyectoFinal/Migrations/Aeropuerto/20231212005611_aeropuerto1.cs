@@ -5,23 +5,52 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinal.Migrations.Aeropuerto
 {
-    public partial class Initial : Migration
+    public partial class aeropuerto1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Mantenimientos",
+                name: "Bitacoras",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    id_error = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_consecutivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    cod_registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    descripcion_mantenimiento = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    cod_registro = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    date_registro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    tipo_registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    descripcion_registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    detalle_registro = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mantenimientos", x => x.Id);
+                    table.PrimaryKey("PK_Bitacoras", x => x.cod_registro);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Consecutivos",
+                columns: table => new
+                {
+                    id_consecutivo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    descripcion_consecutivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    prefijo_consecutivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    rango_Inicial = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    rango_Final = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    valor_consecutivo = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consecutivos", x => x.id_consecutivo);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Errores",
+                columns: table => new
+                {
+                    id_error = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    fecha_error = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    mensaje_error = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Errores", x => x.id_error);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,8 +70,7 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 name: "Roles",
                 columns: table => new
                 {
-                    id_rol = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id_rol = table.Column<int>(type: "int", nullable: false),
                     nom_rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -51,64 +79,35 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bitacoras",
+                name: "Mantenimientos",
                 columns: table => new
                 {
-                    cod_registro = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    date_registro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    tipo_registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    descripcion_registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    detalle_registro = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bitacoras", x => x.cod_registro);
-                    table.ForeignKey(
-                        name: "FK_Bitacoras_Mantenimientos_cod_registro",
-                        column: x => x.cod_registro,
-                        principalTable: "Mantenimientos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Consecutivos",
-                columns: table => new
-                {
-                    id_consecutivo = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    descripcion_consecutivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    prefijo_consecutivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    rango_Inicial = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    rango_Final = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    valor_consecutivo = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Consecutivos", x => x.id_consecutivo);
-                    table.ForeignKey(
-                        name: "FK_Consecutivos_Mantenimientos_id_consecutivo",
-                        column: x => x.id_consecutivo,
-                        principalTable: "Mantenimientos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Errores",
-                columns: table => new
-                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     id_error = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    fecha_error = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    mensaje_error = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    id_consecutivo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    cod_registro = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    descripcion_mantenimiento = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Errores", x => x.id_error);
+                    table.PrimaryKey("PK_Mantenimientos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Errores_Mantenimientos_id_error",
+                        name: "FK_Mantenimientos_Bitacoras_cod_registro",
+                        column: x => x.cod_registro,
+                        principalTable: "Bitacoras",
+                        principalColumn: "cod_registro",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Mantenimientos_Consecutivos_id_consecutivo",
+                        column: x => x.id_consecutivo,
+                        principalTable: "Consecutivos",
+                        principalColumn: "id_consecutivo",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Mantenimientos_Errores_id_error",
                         column: x => x.id_error,
-                        principalTable: "Mantenimientos",
-                        principalColumn: "Id",
+                        principalTable: "Errores",
+                        principalColumn: "id_error",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -119,17 +118,17 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     cod_agencia = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     nom_agencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     logo_agencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_pais = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Paisid_pais = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    id_pais = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Agencias", x => x.cod_agencia);
                     table.ForeignKey(
-                        name: "FK_Agencias_Paises_Paisid_pais",
-                        column: x => x.Paisid_pais,
+                        name: "FK_Agencias_Paises_cod_agencia",
+                        column: x => x.cod_agencia,
                         principalTable: "Paises",
-                        principalColumn: "id_pais");
+                        principalColumn: "id_pais",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,15 +143,14 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     contra_usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     pregunta_seguridad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     respuesta_seguridad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_rol = table.Column<int>(type: "int", nullable: false),
-                    Rolid_rol = table.Column<int>(type: "int", nullable: false)
+                    id_rol = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.id_usuario);
                     table.ForeignKey(
-                        name: "FK_Usuarios_Roles_Rolid_rol",
-                        column: x => x.Rolid_rol,
+                        name: "FK_Usuarios_Roles_id_rol",
+                        column: x => x.id_rol,
                         principalTable: "Roles",
                         principalColumn: "id_rol",
                         onDelete: ReferentialAction.Cascade);
@@ -191,15 +189,14 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     num_cuenta = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     cod_seguridad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     contra_easy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    usuarioid_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    id_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ComprasEasyPay", x => x.num_cuenta);
                     table.ForeignKey(
-                        name: "FK_ComprasEasyPay_Usuarios_usuarioid_usuario",
-                        column: x => x.usuarioid_usuario,
+                        name: "FK_ComprasEasyPay_Usuarios_id_usuario",
+                        column: x => x.id_usuario,
                         principalTable: "Usuarios",
                         principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
@@ -212,15 +209,14 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     num_tarjeta = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     fecha_expiracion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     cvv_tarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Usuarioid_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    id_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ComprasTarjeta", x => x.num_tarjeta);
                     table.ForeignKey(
-                        name: "FK_ComprasTarjeta_Usuarios_Usuarioid_usuario",
-                        column: x => x.Usuarioid_usuario,
+                        name: "FK_ComprasTarjeta_Usuarios_id_usuario",
+                        column: x => x.id_usuario,
                         principalTable: "Usuarios",
                         principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
@@ -256,38 +252,38 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     fecha_vuelo = table.Column<DateTime>(type: "datetime2", nullable: false),
                     estado_vuelo = table.Column<int>(type: "int", nullable: false),
                     nom_estadoV = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    cod_puerta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    puertacod_puerta = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    id_aerolinea = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Aerolineaid_aerolinea = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    id_pais = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Paisid_pais = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    id_usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Usuarioid_usuario = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    cod_puerta = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    id_aerolinea = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    id_pais = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    id_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vuelos", x => x.cod_vuelo);
                     table.ForeignKey(
-                        name: "FK_Vuelos_Aerolineas_Aerolineaid_aerolinea",
-                        column: x => x.Aerolineaid_aerolinea,
+                        name: "FK_Vuelos_Aerolineas_id_aerolinea",
+                        column: x => x.id_aerolinea,
                         principalTable: "Aerolineas",
-                        principalColumn: "id_aerolinea");
+                        principalColumn: "id_aerolinea",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vuelos_Paises_Paisid_pais",
-                        column: x => x.Paisid_pais,
+                        name: "FK_Vuelos_Paises_id_pais",
+                        column: x => x.id_pais,
                         principalTable: "Paises",
-                        principalColumn: "id_pais");
+                        principalColumn: "id_pais",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vuelos_Puertas_puertacod_puerta",
-                        column: x => x.puertacod_puerta,
+                        name: "FK_Vuelos_Puertas_cod_puerta",
+                        column: x => x.cod_puerta,
                         principalTable: "Puertas",
-                        principalColumn: "cod_puerta");
+                        principalColumn: "cod_puerta",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vuelos_Usuarios_Usuarioid_usuario",
-                        column: x => x.Usuarioid_usuario,
+                        name: "FK_Vuelos_Usuarios_id_usuario",
+                        column: x => x.id_usuario,
                         principalTable: "Usuarios",
-                        principalColumn: "id_usuario");
+                        principalColumn: "id_usuario",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,26 +295,23 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                     cantidad_tkt = table.Column<int>(type: "int", nullable: false),
                     mensaje_reserva = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Pago_Final = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    id_usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    usuarioid_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    cod_vuelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Vuelocod_vuelo = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    id_usuario = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    cod_vuelo = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservas", x => x.num_reservacion);
                     table.ForeignKey(
-                        name: "FK_Reservas_Usuarios_usuarioid_usuario",
-                        column: x => x.usuarioid_usuario,
+                        name: "FK_Reservas_Usuarios_id_usuario",
+                        column: x => x.id_usuario,
                         principalTable: "Usuarios",
                         principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservas_Vuelos_Vuelocod_vuelo",
-                        column: x => x.Vuelocod_vuelo,
+                        name: "FK_Reservas_Vuelos_cod_vuelo",
+                        column: x => x.cod_vuelo,
                         principalTable: "Vuelos",
-                        principalColumn: "cod_vuelo",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "cod_vuelo");
                 });
 
             migrationBuilder.CreateIndex(
@@ -332,19 +325,32 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 column: "id_pais");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Agencias_Paisid_pais",
-                table: "Agencias",
-                column: "Paisid_pais");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ComprasEasyPay_usuarioid_usuario",
+                name: "IX_ComprasEasyPay_id_usuario",
                 table: "ComprasEasyPay",
-                column: "usuarioid_usuario");
+                column: "id_usuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ComprasTarjeta_Usuarioid_usuario",
+                name: "IX_ComprasTarjeta_id_usuario",
                 table: "ComprasTarjeta",
-                column: "Usuarioid_usuario");
+                column: "id_usuario");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mantenimientos_cod_registro",
+                table: "Mantenimientos",
+                column: "cod_registro",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mantenimientos_id_consecutivo",
+                table: "Mantenimientos",
+                column: "id_consecutivo",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mantenimientos_id_error",
+                table: "Mantenimientos",
+                column: "id_error",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Puertas_Aerolineaid_aerolinea",
@@ -352,46 +358,45 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 column: "Aerolineaid_aerolinea");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_usuarioid_usuario",
+                name: "IX_Reservas_cod_vuelo",
                 table: "Reservas",
-                column: "usuarioid_usuario");
+                column: "cod_vuelo",
+                unique: true,
+                filter: "[cod_vuelo] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_Vuelocod_vuelo",
+                name: "IX_Reservas_id_usuario",
                 table: "Reservas",
-                column: "Vuelocod_vuelo");
+                column: "id_usuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_Rolid_rol",
+                name: "IX_Usuarios_id_rol",
                 table: "Usuarios",
-                column: "Rolid_rol");
+                column: "id_rol");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vuelos_Aerolineaid_aerolinea",
+                name: "IX_Vuelos_cod_puerta",
                 table: "Vuelos",
-                column: "Aerolineaid_aerolinea");
+                column: "cod_puerta");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vuelos_Paisid_pais",
+                name: "IX_Vuelos_id_aerolinea",
                 table: "Vuelos",
-                column: "Paisid_pais");
+                column: "id_aerolinea");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vuelos_puertacod_puerta",
+                name: "IX_Vuelos_id_pais",
                 table: "Vuelos",
-                column: "puertacod_puerta");
+                column: "id_pais");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vuelos_Usuarioid_usuario",
+                name: "IX_Vuelos_id_usuario",
                 table: "Vuelos",
-                column: "Usuarioid_usuario");
+                column: "id_usuario");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Bitacoras");
-
             migrationBuilder.DropTable(
                 name: "ComprasEasyPay");
 
@@ -399,16 +404,19 @@ namespace ProyectoFinal.Migrations.Aeropuerto
                 name: "ComprasTarjeta");
 
             migrationBuilder.DropTable(
-                name: "Consecutivos");
-
-            migrationBuilder.DropTable(
-                name: "Errores");
+                name: "Mantenimientos");
 
             migrationBuilder.DropTable(
                 name: "Reservas");
 
             migrationBuilder.DropTable(
-                name: "Mantenimientos");
+                name: "Bitacoras");
+
+            migrationBuilder.DropTable(
+                name: "Consecutivos");
+
+            migrationBuilder.DropTable(
+                name: "Errores");
 
             migrationBuilder.DropTable(
                 name: "Vuelos");
