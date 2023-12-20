@@ -75,6 +75,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != aerolinea.id_aerolinea)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 bad request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
