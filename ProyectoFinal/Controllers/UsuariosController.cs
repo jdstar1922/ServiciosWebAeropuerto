@@ -26,7 +26,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Usuarios == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.Usuarios.ToListAsync();
         }
@@ -37,12 +43,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Usuarios == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var usuario = await _context.Usuarios.FindAsync(id);
 
             if (usuario == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -56,6 +74,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != usuario.id_usuario)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 bad request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -63,12 +87,25 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "modificar";
+                bitacora.descripcion_registro = "modificar usuario";
+                bitacora.detalle_registro = usuario.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!UsuarioExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
@@ -92,12 +129,25 @@ namespace ProyectoFinal.Controllers
             _context.Usuarios.Add(usuario);
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "agregar";
+                bitacora.descripcion_registro = "agregar usuario";
+                bitacora.detalle_registro = usuario.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
                 if (UsuarioExists(usuario.id_usuario))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
@@ -115,15 +165,34 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Usuarios == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
             _context.Usuarios.Remove(usuario);
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "eliminar";
+            bitacora.descripcion_registro = "eliminar usuario";
+            bitacora.detalle_registro = usuario.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

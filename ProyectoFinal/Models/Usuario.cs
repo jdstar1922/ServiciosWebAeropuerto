@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ProyectoFinal.Models
 {
@@ -21,5 +22,9 @@ namespace ProyectoFinal.Models
         public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); 
         public ICollection<CompraEasyPay> CompraEasyPays { get; set; } = new List<CompraEasyPay>();
         public ICollection<CompraTarjeta> CompraTarjetas { get; set; } = new List<CompraTarjeta>();
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

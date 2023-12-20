@@ -26,6 +26,7 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Roles == null)
           {
+
               return NotFound();
           }
             return await _context.Roles.ToListAsync();
@@ -43,6 +44,11 @@ namespace ProyectoFinal.Controllers
 
             if (rol == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
                 return NotFound();
             }
 
@@ -56,6 +62,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != rol.id_rol)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 Bad Request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -63,16 +75,36 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Modificar";
+                bitacora.descripcion_registro = "Modificacion de Rol";
+                bitacora.detalle_registro = rol.ToString();
+                _context.Bitacoras.Add(bitacora);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!RolExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "Error desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -87,9 +119,22 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Roles == null)
           {
-              return Problem("Entity set 'AeropuertoContext.Roles'  is null.");
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "Entity set 'AeropuertoContext.Roles'  is null.";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return Problem("Entity set 'AeropuertoContext.Roles'  is null.");
           }
             _context.Roles.Add(rol);
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Agregar";
+            bitacora.descripcion_registro = "Agregar Rol";
+            bitacora.detalle_registro = rol.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRol", new { id = rol.id_rol }, rol);
@@ -101,15 +146,34 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Roles == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var rol = await _context.Roles.FindAsync(id);
             if (rol == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
             _context.Roles.Remove(rol);
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Remover";
+            bitacora.descripcion_registro = "Remover Rol";
+            bitacora.detalle_registro = rol.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

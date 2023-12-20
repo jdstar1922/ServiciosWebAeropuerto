@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ProyectoFinal.Models
 {
@@ -13,5 +14,9 @@ namespace ProyectoFinal.Models
         public ICollection<Agencia> Agencias { get;} = new List<Agencia>();
         public ICollection<Aerolinea>? Aerolineas { get;} = new List<Aerolinea>();
         public ICollection<Vuelo> Vuelos { get;} = new List<Vuelo>();
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

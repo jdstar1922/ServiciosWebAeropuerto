@@ -15,5 +15,9 @@ namespace ProyectoFinal.Models
         public string descripcion_registro { get; set; } = null!;
         public string detalle_registro { get; set; } = null!;
         public Mantenimiento? Mantenimiento { get; set; }
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

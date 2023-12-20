@@ -26,7 +26,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Agencias == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.Agencias.ToListAsync();
         }
@@ -37,12 +43,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Agencias == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var agencia = await _context.Agencias.FindAsync(id);
 
             if (agencia == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -56,6 +74,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != agencia.cod_agencia)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 Bad Request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -63,16 +87,35 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Modificar";
+                bitacora.descripcion_registro = "Modificar agencia";
+                bitacora.detalle_registro = agencia.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!AgenciaExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -92,16 +135,35 @@ namespace ProyectoFinal.Controllers
             _context.Agencias.Add(agencia);
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Agregar";
+                bitacora.descripcion_registro = "Agregar agencia";
+                bitacora.detalle_registro = agencia.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
                 if (AgenciaExists(agencia.cod_agencia))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 Conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -115,15 +177,34 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Agencias == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var agencia = await _context.Agencias.FindAsync(id);
             if (agencia == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
             _context.Agencias.Remove(agencia);
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Remover";
+            bitacora.descripcion_registro = "Remover agencia";
+            bitacora.detalle_registro = agencia.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

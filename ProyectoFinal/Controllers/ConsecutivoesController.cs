@@ -26,7 +26,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Consecutivos == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.Consecutivos.ToListAsync();
         }
@@ -37,12 +43,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Consecutivos == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var consecutivo = await _context.Consecutivos.FindAsync(id);
 
             if (consecutivo == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -56,6 +74,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != consecutivo.id_consecutivo)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 bad request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -63,16 +87,35 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Modificar";
+                bitacora.descripcion_registro = "Modificar consecutivo";
+                bitacora.detalle_registro = consecutivo.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ConsecutivoExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -87,21 +130,46 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Consecutivos == null)
           {
-              return Problem("Entity set 'AeropuertoContext.Consecutivos'  is null.");
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "consecutivos is null";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return Problem("Entity set 'AeropuertoContext.Consecutivos'  is null.");
           }
             _context.Consecutivos.Add(consecutivo);
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Agregar";
+                bitacora.descripcion_registro = "Agregar consecutivo";
+                bitacora.detalle_registro = consecutivo.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
                 if (ConsecutivoExists(consecutivo.id_consecutivo))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -115,15 +183,34 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Consecutivos == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var consecutivo = await _context.Consecutivos.FindAsync(id);
             if (consecutivo == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
             _context.Consecutivos.Remove(consecutivo);
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Eliminar";
+            bitacora.descripcion_registro = "Eliminar consecutivo";
+            bitacora.detalle_registro = consecutivo.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

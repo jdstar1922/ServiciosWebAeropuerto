@@ -26,7 +26,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Bitacoras == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.Bitacoras.ToListAsync();
         }
@@ -37,12 +43,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Bitacoras == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var bitacora = await _context.Bitacoras.FindAsync(id);
 
             if (bitacora == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -56,6 +74,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != bitacora.cod_registro)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "409 Bad request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -69,10 +93,22 @@ namespace ProyectoFinal.Controllers
             {
                 if (!BitacoraExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "Desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -98,10 +134,22 @@ namespace ProyectoFinal.Controllers
             {
                 if (BitacoraExists(bitacora.cod_registro))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -115,11 +163,23 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Bitacoras == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var bitacora = await _context.Bitacoras.FindAsync(id);
             if (bitacora == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 

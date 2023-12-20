@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ProyectoFinal.Models
 {
@@ -15,5 +16,9 @@ namespace ProyectoFinal.Models
         public int valor_consecutivo { get; set; }
 
         public Mantenimiento? Mantenimiento { get; set; }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

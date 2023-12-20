@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
@@ -17,5 +18,9 @@ namespace ProyectoFinal.Models
         public string cod_registro { get; set; } = null!;
         public Bitacora? Bitacora { get; set; }
         public string descripcion_mantenimiento { get; set; } = null!;
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

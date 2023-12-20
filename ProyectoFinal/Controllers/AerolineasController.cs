@@ -27,7 +27,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Aerolineas == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.Aerolineas.ToListAsync();
         }
@@ -38,12 +44,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Aerolineas == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var aerolinea = await _context.Aerolineas.FindAsync(id);
 
             if (aerolinea == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -64,16 +82,35 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Modificar";
+                bitacora.descripcion_registro = "Modificar aerolinea";
+                bitacora.detalle_registro = aerolinea.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!AerolineaExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -88,7 +125,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.Aerolineas == null)
           {
-              return Problem("Entity set 'AeropuertoContext.Aerolineas'  is null.");
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "Entity is null";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return Problem("Entity set 'AeropuertoContext.Aerolineas'  is null.");
           }
 
             ConsecutivoHandler con = new();
@@ -97,6 +140,12 @@ namespace ProyectoFinal.Controllers
 
             if (nuevo_id == "")
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "cantidad maxima utilizada";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return Problem("La cantidad máxima de consecutivos se ha usado");
             }
             else
@@ -106,16 +155,35 @@ namespace ProyectoFinal.Controllers
             _context.Aerolineas.Add(aerolinea);
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Agregar";
+                bitacora.descripcion_registro = "Agregar aerolinea";
+                bitacora.detalle_registro = aerolinea.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
                 if (AerolineaExists(aerolinea.id_aerolinea))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 Conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -129,11 +197,23 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.Aerolineas == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var aerolinea = await _context.Aerolineas.FindAsync(id);
             if (aerolinea == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -142,8 +222,21 @@ namespace ProyectoFinal.Controllers
             string liberar = await con.LiberarConsecutivo("2", _context);
             if (liberar == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "Rango inicial alcanzado";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return Problem("Rango inicial alcanzado");
             }
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Remover";
+            bitacora.descripcion_registro = "Remover aerolinea";
+            bitacora.detalle_registro = aerolinea.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

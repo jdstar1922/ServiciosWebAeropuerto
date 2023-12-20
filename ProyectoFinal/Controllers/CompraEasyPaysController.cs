@@ -27,7 +27,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.ComprasEasyPay == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             return await _context.ComprasEasyPay.ToListAsync();
         }
@@ -38,12 +44,24 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.ComprasEasyPay == null)
           {
-              return NotFound();
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return NotFound();
           }
             var compraEasyPay = await _context.ComprasEasyPay.FindAsync(id);
 
             if (compraEasyPay == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -57,6 +75,12 @@ namespace ProyectoFinal.Controllers
         {
             if (id != compraEasyPay.num_cuenta)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "400 Bad Request";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -64,16 +88,35 @@ namespace ProyectoFinal.Controllers
 
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Modificar";
+                bitacora.descripcion_registro = "Modificar compra";
+                bitacora.detalle_registro = compraEasyPay.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!CompraEasyPayExists(id))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "404 Not Found";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return NotFound();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -88,7 +131,13 @@ namespace ProyectoFinal.Controllers
         {
           if (_context.ComprasEasyPay == null)
           {
-              return Problem("Entity set 'AeropuertoContext.ComprasEasyPay'  is null.");
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "Compras is null";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
+                return Problem("Entity set 'AeropuertoContext.ComprasEasyPay'  is null.");
           }
 
             ConsecutivoHandler con = new();
@@ -97,6 +146,12 @@ namespace ProyectoFinal.Controllers
 
             if (nuevo_id == "")
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "cantidad maxima";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return Problem("La cantidad máxima de consecutivos se ha usado");
             }
             else
@@ -106,16 +161,35 @@ namespace ProyectoFinal.Controllers
             _context.ComprasEasyPay.Add(compraEasyPay);
             try
             {
+                Bitacora bitacora = new();
+                bitacora.cod_registro = Guid.NewGuid().ToString();
+                bitacora.date_registro = DateTime.Now;
+                bitacora.tipo_registro = "Agregar";
+                bitacora.descripcion_registro = "Agregar compra";
+                bitacora.detalle_registro = compraEasyPay.ToString();
+                _context.Bitacoras.Add(bitacora);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
                 if (CompraEasyPayExists(compraEasyPay.num_cuenta))
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "409 conflict";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     return Conflict();
                 }
                 else
                 {
+                    Error error = new();
+                    error.id_error = Guid.NewGuid().ToString();
+                    error.fecha_error = $"{DateTime.Now}";
+                    error.mensaje_error = "desconocido";
+                    _context.Errores.Add(error);
+                    await _context.SaveChangesAsync();
                     throw;
                 }
             }
@@ -129,11 +203,23 @@ namespace ProyectoFinal.Controllers
         {
             if (_context.ComprasEasyPay == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
             var compraEasyPay = await _context.ComprasEasyPay.FindAsync(id);
             if (compraEasyPay == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "404 Not Found";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return NotFound();
             }
 
@@ -142,8 +228,21 @@ namespace ProyectoFinal.Controllers
             string liberar = await con.LiberarConsecutivo("4", _context);
             if (liberar == null)
             {
+                Error error = new();
+                error.id_error = Guid.NewGuid().ToString();
+                error.fecha_error = $"{DateTime.Now}";
+                error.mensaje_error = "rango inicial alcanzado";
+                _context.Errores.Add(error);
+                await _context.SaveChangesAsync();
                 return Problem("Rango inicial alcanzado");
             }
+            Bitacora bitacora = new();
+            bitacora.cod_registro = Guid.NewGuid().ToString();
+            bitacora.date_registro = DateTime.Now;
+            bitacora.tipo_registro = "Eliminar";
+            bitacora.descripcion_registro = "Eliminar compra";
+            bitacora.detalle_registro = compraEasyPay.ToString();
+            _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
 
             return NoContent();

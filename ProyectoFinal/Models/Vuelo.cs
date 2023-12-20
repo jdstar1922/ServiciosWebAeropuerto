@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ProyectoFinal.Models
 {
@@ -21,5 +22,9 @@ namespace ProyectoFinal.Models
         public string id_usuario { get; set; } = null!;
         public Usuario? Usuario { get; set; }
         public Reserva? Reserva { get; set; }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

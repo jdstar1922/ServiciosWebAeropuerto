@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ProyectoFinal.Models
 {
@@ -12,5 +13,9 @@ namespace ProyectoFinal.Models
         public string contra_easy { get; set; } = null!;
         public string id_usuario { get; set; } = null!;
         public Usuario? usuario { get; set;}
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

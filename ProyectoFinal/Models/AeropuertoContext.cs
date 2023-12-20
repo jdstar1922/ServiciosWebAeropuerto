@@ -77,10 +77,12 @@ namespace ProyectoFinal.Models
                 .HasOne(e => e.Aerolinea)
                 .WithMany(e => e.Vuelos)
                 .HasForeignKey(e => e.id_aerolinea);
+
             modelBuilder.Entity<Pais>()
                 .HasMany(e => e.Agencias)
                 .WithOne(e => e.Pais)
-                .HasForeignKey(e => e.cod_agencia);
+                .HasForeignKey(e => e.id_pais);
+
             modelBuilder.Entity<Pais>()
                 .HasMany(e => e.Aerolineas)
                 .WithOne(e => e.Pais)
